@@ -27,7 +27,7 @@ export default function Home() {
     loadJobs();
   }, []);
 
-  const handleSubmit =async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     const res = await fetch('api/jobs', {
