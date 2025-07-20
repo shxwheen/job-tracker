@@ -44,6 +44,25 @@ export default function Home() {
         setMessage('Failed to add job');
       }
     };
+
+    const updateStatus = async (jobID: string, newStatus: string) => {
+      const res = await fetch(`/api/jobs/${jobID}`, {
+        method: 'PATCH',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({status: newStatus}),
+      });
+
+      if (res.ok) {
+        const updatedJob = await res.json();
+        setJobs((prev) => 
+          prev.map((job) => job.id === updatedJob.id ? updatedJob : job)
+        );
+      } else {
+        console.error('Failed to update status');
+      }
+    }
+
+
     return (
       <div className="max-w-md mx-auto p-6 bg-white shadow-md mt-6 rounded">
         <h1 className="text-2xl font-bold mb-4">Add a Job</h1>
@@ -97,9 +116,18 @@ export default function Home() {
                     <p className="font-medium">{job.company}</p>
                     <p className="text-sm text-gray-600">{job.position}</p>
                   </div>
-                  <span className="text-sm capitalize bg-gray-200 px-2 py-1 rounded">
-                    {job.status}
-                  </span>
+
+                  {/* HERE: status dropdown */}
+                  <select
+                    value={job.status}
+                    onChange={(e) => updateStatus(job.id, e.target.value)}
+                    className="text-sm capitalize bg-gray-200 px-2 py-1 rounded"
+                  >
+                    <option value="applied">Applied</option>
+                    <option value="interview">Interview</option>
+                    <option value="offer">Offer</option>
+                    <option value="rejected">Rejected</option>
+                  </select>
                 </li>
               ))}
             </ul>
