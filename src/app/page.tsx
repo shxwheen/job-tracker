@@ -37,6 +37,8 @@ export default function Home() {
     });
 
     if (res.ok) {
+      const newJob = await res.json();
+      setJobs((prev) => [...prev, newJob]);
       setMessage('Job added successfully');
       setCompany('');
       setStatus('applied');
