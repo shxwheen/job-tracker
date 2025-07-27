@@ -62,6 +62,17 @@ export default function Home() {
       }
     }
 
+    const deleteJob = async (id: string) => {
+      const res = await fetch(`/api/jobs/${id}`, {
+        method: 'DELETE',
+      });
+      if (res.status === 204) {
+        setJobs((prev) => prev.filter((job) => job.id !== id));
+      } else {
+        console.error('Failed to delete job');
+      }
+    }
+
 
     return (
       <div className="max-w-md mx-auto p-6 bg-white shadow-md mt-6 rounded">
@@ -128,6 +139,9 @@ export default function Home() {
                     <option value="offer">Offer</option>
                     <option value="rejected">Rejected</option>
                   </select>
+                  <button onClick={() => deleteJob(job.id)} className="text-red-500 px-2 py-1">
+                    Delete
+                  </button>
                 </li>
               ))}
             </ul>

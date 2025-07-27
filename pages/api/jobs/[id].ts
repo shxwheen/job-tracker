@@ -15,6 +15,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const jobId = Array.isArray(req.query.id) ? req.query.id[0] : req.query.id;
   if (!jobId) return res.status(400).json({ error: "Missing job ID" });
 
+  // delete job
+  if (req.method === "DELETE") {
+    // only delete if the job belongs to the user
+    const result = await prisma.job.deleteMany({
+      where: { id: jobId, userId },
+    });
+    if (result.count === 0) {
+      return res.status(404).json({ error: "Job not found" });
+    }
+    return res.status(204).end();
+  }
+
   if (req.method === "PATCH") {
     const { status } = req.body;
     if (!status) return res.status(400).json({ error: "Missing status" });
